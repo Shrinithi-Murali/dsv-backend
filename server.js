@@ -6,13 +6,20 @@ require('dotenv').config();
 const userRoutes = require('./routes/userRoutes');
 
 const app = express();
+
 app.use(cors());
 app.use(express.json());
 
 app.use('/api', userRoutes);
 
-mongoose.connect(process.env.MONGO_URI)
+mongoose.connect(process.env.MONGODB_URI)
   .then(() => {
-    app.listen(5000, () => console.log('Server running on http://localhost:5000'));
+    console.log('MongoDB connected');
+    const PORT = process.env.PORT || 8080;
+    app.listen(PORT, () => {
+      console.log(`Server running on port ${PORT}`);
+    });
   })
-  .catch(err => console.error('DB connection error:', err));
+  .catch(err => {
+    console.error('MongoDB connection error:', err);
+  });
